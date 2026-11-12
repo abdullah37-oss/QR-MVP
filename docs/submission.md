@@ -1,0 +1,18 @@
+# Submission
+
+Implemented: responsive location/device cards, persistent mock demo, server-owned EUR 1.00/300-second snapshot, atomic reservations, Stripe-hosted Checkout integration, signed webhooks, payment validation/event deduplication, persistent activation/deadline/OFF retry worker, opaque customer status, local management CLI, QR generation, configuration restrictions, and setup/acceptance documentation.
+
+Observed verification: Python 3.13.13; dependencies installed; pytest: 10 passed (one dependency deprecation warning). Tests cover duplicate fulfillment, reservations, unpaid/wrong-value events, restart/overdue OFF, activation/OFF failures, forged Stripe signatures, demo restrictions, and HTTP simulated checkout. Actual Uvicorn HTTP GET /l/sample returned 200. Sample QR PNG generated. Installed python-kasa discover_single signature and Device.disconnect verified by introspection; Device base API has no auto-off helper. Physical feature capabilities were not inspected.
+
+Remaining limitations: real Stripe Checkout/webhook forwarding and physical Tapo acceptance not performed — awaiting access. No device-local auto-off configured. No browser/mobile visual automation performed. Checkout-creation ambiguity is conservatively locked for manual review rather than automatically reconciled. Lost expiration webhooks can retain reservations indefinitely. Rate limiting is per-process/in-memory. Price and duration defaults are server constants; changing them requires editing the server reservation/Checkout code consistently. This is a demo/MVP, not approved for unattended hardware or live payments.
+
+Use requirements.lock.txt for the exact installed dependency set. README contains Windows launch, Stripe CLI, QR management, deployment constraints, and hardware acceptance instructions. Run one application instance only. No deployment or real-device action was performed.
+
+## Hosted demo preparation
+Added Dockerfile, railway.json, PORT-aware single-process entrypoint, /healthz with database/worker status, persistent-volume settings template, and explicit hosted-demo configuration safeguards. Existing Stripe validation remains unchanged. Mock devices/simulated payments are the only hosted-demo modes permitted; credentials are rejected there.
+
+Deployment blocker: Railway and Render connections were not installed/authenticated; no hosting CLI or host credential variables were found. Railway connection is the single next requirement. Free/trial credit availability and non-sleeping operation must be confirmed before deploying, with no purchase. No deployment URL exists, so deployed flow verification and HTTPS QR regeneration were not performed. Existing sample QR remains local-only. Real payments and physical Tapo integration remain unverified.
+
+Hosted preparation verification: existing 10 tests passed before new tests; expanded suite 19 passed, one dependency deprecation warning. New tests cover health/database/worker response and hosted-demo opt-in, HTTPS, persistent path, mode and credential restrictions. Docker build and hosted flow were not run (Docker/host connection unavailable).
+
+Repository organization verification: 19 tests passed (one dependency warning). Separate PORT=8765 startup returned HTTP 200 for /healthz with worker_running=true and /l/sample. Temporary smoke database cleanup encountered a Windows file lock after process termination; application checks succeeded. Source secret-pattern scan found no matches. Supporting guides now live under docs/. Generated archives, QR PNGs and runtime data remain local and ignored. Licensing is pending. No deployment performed.
